@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="section">
+        <div class="container">
+
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        {{ post.name }}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        {{ post.description|markdown }}
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a target="_blank" href="{{ post.url }}" class="card-footer-item">{{ post.url }}</a>
+                </footer>
+            </div>
+
+            <h2 class="subtitle comments-title">Comments</h2>
+
+            {% if post.comments|length == 0 %}
+                <p id="no_comments">No comments :(</p>
+            {% else %}
+                {% for comment in post.comments %}
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                @{{ comment.creator }}
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                {{ comment.text|markdown }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <article id="new-comment" class="media">
+                <div class="media-content">
+                    <div class="field">
+                        <p class="control">
+                        <form id="create-comment-form" action="{{ path('postComment', {'post_id': post.id}) }}"
+                              method="post">
+                            <textarea id="markdown" name="text" class="textarea"
+                                      placeholder="Add a comment..."></textarea>
+                        </form>
+                        </p>
+                    </div>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <a id="publish" class="button is-info">Submit</a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+
+        </div>
+    </div>
+{% endblock %}
+
+        {% block stylesheets %}
+
+            <style>
+
+                #no_comments {
+                    margin-bottom: 40px;
+                }
+
+                #new-comment {
+                    margin-top: 40px;
+                }
+
+            </style>
+
+
+        {% endblock %}
+
+        {% block javascripts %}
+            <script>
+                $(document).ready(function () {
+
+                    var simplemde = new SimpleMDE(
+                        {
+                            placeholder: "Awesome Markdown enabled editor!",
+                            renderingConfig: {
+                                codeSyntaxHighlighting: true
+                            },
+                            toolbar: false,
+                            element: document.getElementById("markdown")
+                        });
+
+                    $('#publish').click(function () {
+
+                        $('#create-comment-form').submit();
+
+                    });
+                });
+
+            </script>
+
+        {% endblock %}

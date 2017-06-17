@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="stackinnerflow@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.2">
+    <root id="1"/>
+    <schema id="2" parent="1" name="stackinnerflow">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="information_schema"/>
+    <schema id="4" parent="1" name="mysql"/>
+    <schema id="5" parent="1" name="performance_schema"/>
+    <schema id="6" parent="1" name="phpmyadmin"/>
+    <schema id="7" parent="1" name="Presenter"/>
+    <schema id="8" parent="1" name="symfony"/>
+    <schema id="9" parent="1" name="test"/>
+    <table id="10" parent="2" name="category"/>
+    <table id="11" parent="2" name="comment"/>
+    <table id="12" parent="2" name="fos_user"/>
+    <table id="13" parent="2" name="post"/>
+    <column id="14" parent="10" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="15" parent="10" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="16" parent="10" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="17" parent="11" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="18" parent="11" name="text">
+      <Position>2</Position>
+      <DataType>longtext|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="19" parent="11" name="created">
+      <Position>3</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="20" parent="11" name="post_id">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="21" parent="11" name="UNIQ_9474526C4B89032C">
+      <ColNames>post_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="22" parent="11" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="23" parent="11" name="UNIQ_9474526C4B89032C">
+      <ColNames>post_id</ColNames>
+      <UnderlyingIndexName>UNIQ_9474526C4B89032C</UnderlyingIndexName>
+    </key>
+    <foreign-key id="24" parent="11" name="FK_9474526C4B89032C">
+      <ColNames>post_id</ColNames>
+      <RefSchemaName>stackinnerflow</RefSchemaName>
+      <RefTableName>category</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="25" parent="12" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="26" parent="12" name="username">
+      <Position>2</Position>
+      <DataType>varchar(180)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="27" parent="12" name="username_canonical">
+      <Position>3</Position>
+      <DataType>varchar(180)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="28" parent="12" name="email">
+      <Position>4</Position>
+      <DataType>varchar(180)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="29" parent="12" name="email_canonical">
+      <Position>5</Position>
+      <DataType>varchar(180)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="30" parent="12" name="enabled">
+      <Position>6</Position>
+      <DataType>tinyint(1)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="31" parent="12" name="salt">
+      <Position>7</Position>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="32" parent="12" name="password">
+      <Position>8</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="33" parent="12" name="last_login">
+      <Position>9</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="34" parent="12" name="confirmation_token">
+      <Position>10</Position>
+      <DataType>varchar(180)|0</DataType>
+    </column>
+    <column id="35" parent="12" name="password_requested_at">
+      <Position>11</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="36" parent="12" name="roles">
+      <Position>12</Position>
+      <Comment>(DC2Type:array)</Comment>
+      <DataType>longtext|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="37" parent="12" name="UNIQ_957A647992FC23A8">
+      <ColNames>username_canonical</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="38" parent="12" name="UNIQ_957A6479A0D96FBF">
+      <ColNames>email_canonical</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <index id="39" parent="12" name="UNIQ_957A6479C05FB297">
+      <ColNames>confirmation_token</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="40" parent="12" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="41" parent="12" name="UNIQ_957A647992FC23A8">
+      <ColNames>username_canonical</ColNames>
+      <UnderlyingIndexName>UNIQ_957A647992FC23A8</UnderlyingIndexName>
+    </key>
+    <key id="42" parent="12" name="UNIQ_957A6479A0D96FBF">
+      <ColNames>email_canonical</ColNames>
+      <UnderlyingIndexName>UNIQ_957A6479A0D96FBF</UnderlyingIndexName>
+    </key>
+    <key id="43" parent="12" name="UNIQ_957A6479C05FB297">
+      <ColNames>confirmation_token</ColNames>
+      <UnderlyingIndexName>UNIQ_957A6479C05FB297</UnderlyingIndexName>
+    </key>
+    <column id="44" parent="13" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="45" parent="13" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="46" parent="13" name="description">
+      <Position>3</Position>
+      <DataType>longtext|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="47" parent="13" name="url">
+      <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="48" parent="13" name="category_id">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="49" parent="13" name="created">
+      <Position>6</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="50" parent="13" name="IDX_5A8A6C8D12469DE2">
+      <ColNames>category_id</ColNames>
+    </index>
+    <key id="51" parent="13" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="52" parent="13" name="FK_5A8A6C8D12469DE2">
+      <ColNames>category_id</ColNames>
+      <RefSchemaName>stackinnerflow</RefSchemaName>
+      <RefTableName>category</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+  </database-model>
+</dataSource>

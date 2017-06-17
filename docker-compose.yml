@@ -1,0 +1,28 @@
+version: "2"
+services:
+  www:
+    image: jakubsacha/symfony-docker:php7.1-dev
+    volumes:
+      - app-sync:/var/www/html:rw
+    expose:
+      - "9000"
+    ports:
+      - "8080:80"
+    links:
+      - "db:database"
+    environment:
+        PHP_XDEBUG_ENABLED: 1 # Set 1 to enable.
+        XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=10.254.254.254 remote_enable=1 profiler_enable=0 remote_log=/tmp/xdebug.log"
+        PHP_IDE_CONFIG: "serverName=Docker"
+
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=stackinnerflow
+    ports:
+      - "3306:3306"
+
+volumes:
+  app-sync:
+    external: true

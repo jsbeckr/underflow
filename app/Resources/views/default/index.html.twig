@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+        <div class="nav-item">
+            <div class="field is-grouped">
+                </span>
+                <span>@{{ app.user.username }}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="field is-grouped">
+                <p class="control">
+                    <a id="create" class="button is-primary">
+                    <span class="icon">
+                      <i class="fa fa-plus"></i>
+                    </span>
+                        <span>Create</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="field is-grouped">
+                <p class="control">
+                    <a id="logout" class="button is-danger">
+                    <span class="icon">
+                      <i class="fa fa-sign-out"></i>
+                    </span>
+                        <span>Logout</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+    {% else %}
+
+        <div class="nav-item">
+            <div class="field is-grouped">
+                <p class="control">
+                    <a id="login" class="button is-primary">
+                    <span class="icon">
+                      <i class="fa fa-sign-in"></i>
+                    </span>
+                        <span>Login</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div id="create-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Create Post</p>
+                <button id="create-close" class="delete"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="create-post-form" action="{{ path('createPost') }}" method="post">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <p class="control">
+                            <input class="input" type="text" name="name" placeholder="This is an awesome Link">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label">Category</label>
+                        <p class="control">
+                            <span class="select">
+                              <select name="category">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label">URL</label>
+                        <p class="control">
+                            <input class="input" type="text" name="url" placeholder="https://www.example.com">
+                        </p>
+                    </div>
+                    <div class="field">
+                        <label class="label">Description</label>
+                        <p class="control">
+                            <textarea id="description" class="textarea" name="description"
+                                      placeholder="Pleace write a short description..."></textarea>
+                        </p>
+                    </div>
+                </form>
+            </section>
+            <footer class="modal-card-foot">
+                <a id="create-post" class="button is-success">Create Post</a>
+                <a id="cancel-post" class="button">Cancel</a>
+            </footer>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="container">
+            {% for post in posts %}
+                <div class="box">
+                    <article class="media">
+                        <div class="media-left">
+                            <figure class="image is-64x64">
+                                <img src="{{ asset(post.imageUrl) }}" alt="Image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong><a href="{{ path("showPost", {'id': post.id}) }}">{{ post.getName() }}</a></strong>
+                                    <small>@{{ post.creator }}</small>
+                                    <small><strong><a href="{{ post.url }}">URL</a></strong></small>
+                                    <small><i>{{ post.getCategory() }}</i></small>
+                                    <br>
+                                    {{ post.description|truncate(100) }}
+                                </p>
+                                <p>
+                                    <small>{{ post.created|date("m/d/Y") }}</small>
+                                </p>
+                            </div>
+                        </div>
+                        {% if app.user %}
+                            <div class="media-right">
+                                {% if app.user.username in post.favoritedUsers %}
+                                    <a class="level-item" href="{{ path("unfavoritePost", {'id': post.id}) }}">
+                                        {{ post.favoritedUsers|length }}x<span class="icon"><i
+                                                    class="fa fa-heart"></i></span>
+                                    </a>
+                                {% else %}
+                                    <a class="level-item" href="{{ path("favoritePost", {'id': post.id}) }}">
+                                        {{ post.favoritedUsers|length }}x<span class="icon"><i
+                                                    class="fa fa-heart-o"></i></span>
+                                    </a>
+                                {% endif %}
+                                </a>
+                            </div>
+                        {% else %}
+                            {{ post.favoritedUsers|length }}x<span class="icon"><i
+                                    class="fa fa-heart"></i></span>
+                        {% endif %}
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+
+        $(document).ready(function () {
+
+            var simplemde = new SimpleMDE(
+                {
+                    placeholder: "Awesome Markdown enabled editor!",
+                    renderingConfig: {
+                        codeSyntaxHighlighting: true
+                    },
+                    toolbar: false,
+                    element: document.getElementById("description")
+                });
+
+            var create = $('#create');
+            var createClose = $('#create-close');
+
+            create.click(function () {
+                $('#create-modal').addClass('is-active');
+            });
+
+            createClose.click(function () {
+                $('#create-modal').removeClass('is-active');
+            });
+
+            $('#cancel-post').click(function () {
+                $('#create-modal').removeClass('is-active');
+            });
+
+            $('#create-post').click(function () {
+                $('#create-post-form').submit();
+            });
+
+            $('#logout').click(function () {
+                window.location.replace("{{ path('fos_user_security_logout') }}");
+            });
+
+            $('#login').click(function () {
+                window.location.replace("{{ path('fos_user_security_login') }}")
+            });
+        });
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="section">
+        <div class="columns">
+            <div id="login-form" class="box column is-half is-offset-one-quarter">
+                <div>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                        <a href="{{ path('fos_user_security_logout') }}">
+                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                    {% endif %}
+                </div>
+
+                {% if app.request.hasPreviousSession %}
+                    {% for type, messages in app.session.flashBag.all %}
+                        {% for message in messages %}
+                            <div class="{{ type }}">
+                                {{ message|trans({}, 'FOSUserBundle') }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+
+                {# Customized Login from vendor/fos/Resources/views/Security #}
+                {% trans_default_domain 'FOSUserBundle' %}
+
+                {% if error %}
+                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form action="{{ path("fos_user_security_check") }}" method="post">
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                    {% endif %}
+
+                    <div class="field">
+                        <p class="control">
+                            <label class="label" for="username">{{ 'security.login.username'|trans }}</label>
+                            <input class="input" type="text" id="username" name="_username"
+                                   value="{{ last_username }}"
+                                   required="required"/>
+                        </p>
+                    </div>
+
+                    <div class="field">
+                        <p class="control">
+                            <label class="label" for="password">{{ 'security.login.password'|trans }}</label>
+                            <input class="input" type="password" id="password" name="_password"
+                                   required="required"/>
+                        </p>
+                    </div>
+
+                    <div class="field">
+                        <p class="control">
+                            <label class="checkbox" for="remember_me">
+                                <input class="checkbox" type="checkbox" id="remember_me" name="_remember_me"
+                                       value="on">
+                                {{ 'security.login.remember_me'|trans }}
+                            </label>
+                        </p>
+                    </div>
+                    <input class="primary button is-primary" type="submit" id="_submit" name="_submit"
+                           value="{{ 'security.login.submit'|trans }}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #container {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        #login-form {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+{% endblock %}
