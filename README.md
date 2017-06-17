@@ -1,4 +1,6 @@
-.checkout
-=========
+# Development
+----------
 
-A Symfony project created on June 11, 2017, 8:11 am.
+* **In Container** `php bin/console doctrine:database:create`
+* something more....
+* `make start_dev`
