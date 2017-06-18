@@ -69,25 +69,13 @@
             <section class="modal-card-body">
                 <form id="create-post-form" action="{{ path('createPost') }}" method="post">
                     <div class="field">
-                        <label class="label">Name</label>
+                        <label class="label">Title<span class="mandatory">*</span></label>
                         <p class="control">
                             <input class="input" type="text" name="name" placeholder="This is an awesome Link">
                         </p>
                     </div>
                     <div class="field">
-                        <label class="label">Category</label>
-                        <p class="control">
-                            <span class="select">
-                              <select name="category">
-                                {% for category in categories %}
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                              </select>
-                            </span>
-                        </p>
-                    </div>
-                    <div class="field">
-                        <label class="label">URL</label>
+                        <label class="label">URL<span class="mandatory">*</span></label>
                         <p class="control">
                             <input class="input" type="text" name="url" placeholder="https://www.example.com">
                         </p>
@@ -96,7 +84,7 @@
                         <label class="label">Description</label>
                         <p class="control">
                             <textarea id="description" class="textarea" name="description"
-                                      placeholder="Pleace write a short description..."></textarea>
+                                      placeholder="Description is optional..."></textarea>
                         </p>
                     </div>
                 </form>
@@ -108,60 +96,85 @@
         </div>
     </div>
 
-    <div class="section">
-        <div class="container">
-            {% for post in posts %}
-                <div class="box">
-                    <article class="media">
-                        <div class="media-left">
-                            <figure class="image is-64x64">
-                                <img src="{{ asset(post.imageUrl) }}" alt="Image">
-                            </figure>
-                        </div>
-                        <div class="media-content">
-                            <div class="content">
-                                <p>
-                                    <strong><a href="{{ path("showPost", {'id': post.id}) }}">{{ post.getName() }}</a></strong>
-                                    <small>@{{ post.creator }}</small>
-                                    <small><strong><a href="{{ post.url }}">URL</a></strong></small>
-                                    <small><i>{{ post.getCategory() }}</i></small>
-                                    <br>
-                                    {{ post.description|truncate(100) }}
-                                </p>
-                                <p>
-                                    <small>{{ post.created|date("m/d/Y") }}</small>
-                                </p>
-                            </div>
-                        </div>
-                        {% if app.user %}
-                            <div class="media-right">
-                                {% if app.user.username in post.favoritedUsers %}
-                                    <a class="level-item" href="{{ path("unfavoritePost", {'id': post.id}) }}">
-                                        {{ post.favoritedUsers|length }}x<span class="icon"><i
-                                                    class="fa fa-heart"></i></span>
-                                    </a>
-                                {% else %}
-                                    <a class="level-item" href="{{ path("favoritePost", {'id': post.id}) }}">
-                                        {{ post.favoritedUsers|length }}x<span class="icon"><i
-                                                    class="fa fa-heart-o"></i></span>
-                                    </a>
-                                {% endif %}
-                                </a>
-                            </div>
-                        {% else %}
-                            {{ post.favoritedUsers|length }}x<span class="icon"><i
-                                    class="fa fa-heart"></i></span>
-                        {% endif %}
-                    </article>
-                </div>
-            {% endfor %}
+    <div class="container">
+        <div class="level">
+            <div class="level-item"><h1 class="title">Today</h1></div>
         </div>
+        {% for post in posts %}
+            <div class="">
+                <article class="level">
+                    {#<div class="media-left">#}
+                    {#<figure class="image is-32x32">#}
+                    {#<img src="{{ asset(post.imageUrl) }}" alt="Image">#}
+                    {#</figure>#}
+                    {#</div>#}
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div>
+                                <a class="main-link title" target="_blank" href="{{ post.url }}">
+                                    <p>{{ post.getName() }}</p>
+                                </a>
+                                <p class="heading">
+                                    <small>by {{ post.creator }}</small>
+                                    <small> | <strong><a href="{{ path("showPost", {'id': post.id}) }}">URL</a></strong></small>
+                                    <small> | {{ post.created|date("m/d/Y") }}</small>
+                                    <small> | {{ post.comments|length }} comments</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% if app.user %}
+                        <div class="level-right">
+                            {% if app.user.username in post.favoritedUsers %}
+                                <a class="level-item" href="{{ path("unfavoritePost", {'id': post.id}) }}">
+                                    {{ post.favoritedUsers|length }}x<span class="icon"><i
+                                                class="fa fa-heart"></i></span>
+                                </a>
+                            {% else %}
+                                <a class="level-item" href="{{ path("favoritePost", {'id': post.id}) }}">
+                                    {{ post.favoritedUsers|length }}x<span class="icon"><i
+                                                class="fa fa-heart-o"></i></span>
+                                </a>
+                            {% endif %}
+                        </div>
+                        </a>
+                    {% else %}
+                        {{ post.favoritedUsers|length }} x  <span class="icon"><i
+                                class="fa fa-heart"></i></span>
+                    {% endif %}
+                </article>
+            </div>
+            <hr class="link-divider">
+        {% endfor %}
     </div>
 
 {% endblock %}
 
 {% block stylesheets %}
+    <style>
+        .mandatory {
+            color: red;
+        }
 
+        a.main-link {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .link-divider {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .custom-box {
+            margin-bottom: 5px;
+            padding: 3px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: groove;
+            border-width: 1px;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}

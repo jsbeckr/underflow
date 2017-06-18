@@ -12,7 +12,7 @@ services:
       - "db:database"
     environment:
         PHP_XDEBUG_ENABLED: 1 # Set 1 to enable.
-        XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=10.254.254.254 remote_enable=1 profiler_enable=0 remote_log=/tmp/xdebug.log"
+        XDEBUG_CONFIG: "idekey=PHPSTORM remote_host=10.254.254.254 remote_enable=0 profiler_enable=0 remote_log=/tmp/xdebug.log"
         PHP_IDE_CONFIG: "serverName=Docker"
 
   db:
