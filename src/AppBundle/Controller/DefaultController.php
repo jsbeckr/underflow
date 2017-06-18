@@ -15,21 +15,45 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="main")
+     * @Route("/", name="start")
      */
-    public function indexAction(Request $request)
+    public function startAction()
+    {
+        return $this->redirectToRoute('main', ['today' => date('Y-m-d')]);
+    }
+
+    /**
+     * @Route("show/{today}", name="main")
+     */
+    public function indexAction(Request $request, $today = "")
     {
         $em = $this->getDoctrine()->getManager();
         $postRepository = $em->getRepository('AppBundle:Post');
         $categoryRepository = $em->getRepository("AppBundle:Category");
 
-        $posts = $postRepository->findAll();
-        $categories = $categoryRepository->findAll();
+        if (empty($today)) {
+            $today = date('Y-m-d');
+        }
 
-        return $this->render('default/index.html.twig', [
-            'posts' => $posts,
-            'categories' => $categories
-        ]);
+        $result = $postRepository->createQueryBuilder('post')
+            ->where('post.created > :startDate ')
+            ->andWhere('post.created < :endDate')
+            ->setParameter('startDate', new DateTime(date('Y-m-d', strtotime($today))))
+            ->setParameter('endDate', new DateTime(date('Y-m-d', strtotime($today . '+1 day'))))
+            ->orderBy('post.created', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $parameters = [
+            'posts' => $result,
+            'previous' => date('Y-m-d', strtotime($today . ' -1 day')),
+            'today' => $today];
+
+        if (!($today == date('Y-m-d'))) {
+            $parameters['next'] = date('Y-m-d', strtotime($today . ' +1 day'));
+        }
+
+        return $this->render('default/index.html.twig', $parameters);
     }
 
     /**
@@ -44,8 +68,8 @@ class DefaultController extends Controller
         $name = $request->get("name");
         $description = $request->get("description");
         $url = $request->get("url");
-        $categoryId = $request->get("category");
-        $category = $em->getRepository("AppBundle:Category")->find($categoryId);
+//        $categoryId = $request->get("category");
+        $category = $em->getRepository("AppBundle:Category")->find(0);
 
         $info = Embed::create($url);
         $image_filename = "images/" . uniqid("", true) . ".png";
@@ -122,7 +146,7 @@ class DefaultController extends Controller
         $em->persist($post);
         $em->flush();
 
-        return $this->redirectToRoute("main");
+        return $this->redirectToRoute("main", ["today" => $post->getCreated()->format("Y-m-d")]);
     }
 
     /**
@@ -138,7 +162,7 @@ class DefaultController extends Controller
         $em->persist($post);
         $em->flush();
 
-        return $this->redirectToRoute("main");
+        return $this->redirectToRoute("main", ["today" => $post->getCreated()->format("Y-m-d")]);
     }
 
     function addScheme($url, $scheme = 'http://')

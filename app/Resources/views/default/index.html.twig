@@ -6,14 +6,6 @@
 
         <div class="nav-item">
             <div class="field is-grouped">
-                </span>
-                <span>@{{ app.user.username }}</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="nav-item">
-            <div class="field is-grouped">
                 <p class="control">
                     <a id="create" class="button is-primary">
                     <span class="icon">
@@ -97,8 +89,26 @@
     </div>
 
     <div class="container">
-        <div class="level">
-            <div class="level-item"><h1 class="title">Today</h1></div>
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if next is defined %}
+                                    <a class="nav-link" href="{{ path('main', {'today': next}) }}">Next</a>
+                                {% else %}
+                                    <p style="font-weight: bold; color: lightgray;">NEXT</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    <div class="level-item"><h1 class="title">{{ today|date("d.m.y") }}</h1></div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a class="nav-link" href="{{ path('main', {'today': previous}) }}">Previous</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         {% for post in posts %}
             <div class="">
@@ -117,8 +127,8 @@
                                 <p class="heading">
                                     <small>by {{ post.creator }}</small>
                                     <small> | <strong><a href="{{ path("showPost", {'id': post.id}) }}">URL</a></strong></small>
-                                    <small> | {{ post.created|date("m/d/Y") }}</small>
-                                    <small> | {{ post.comments|length }} comments</small>
+                                    <small> | {{ post.created|date("H:i") }}</small>
+                                    <small> | <a href="{{ path("showPost", {'id': post.id}) }}">{{ post.comments|length }} comments</a></small>
                                 </p>
                             </div>
                         </div>
@@ -139,7 +149,7 @@
                         </div>
                         </a>
                     {% else %}
-                        {{ post.favoritedUsers|length }} x  <span class="icon"><i
+                        {{ post.favoritedUsers|length }}x<span class="icon"><i
                                 class="fa fa-heart"></i></span>
                     {% endif %}
                 </article>
@@ -154,6 +164,11 @@
     <style>
         .mandatory {
             color: red;
+        }
+
+        .nav-link {
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         a.main-link {

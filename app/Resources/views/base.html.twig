@@ -27,6 +27,13 @@
             <h1 class="title">Underflow</h1>
             <a class="nav-item is-tab is-hidden-mobile is-active">Links</a>
             <a class="nav-item is-tab is-hidden-mobile">Documentations</a>
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="nav-item is-tab">
+                    <strong>@{{ app.user.username }}</strong>
+                </a>
+            {% endif %}
+
         </a>
     </div>
 

@@ -11,15 +11,17 @@
 
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">
+                    <p class="card-header-title title">
                         {{ post.name }}
                     </p>
                 </header>
-                <div class="card-content">
-                    <div class="content">
-                        {{ post.description|markdown }}
+                {% if post.description %}
+                    <div class="card-content">
+                        <div class="content">
+                            {{ post.description|markdown }}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
                 <footer class="card-footer">
                     <a target="_blank" href="{{ post.url }}" class="card-footer-item">{{ post.url }}</a>
                 </footer>
